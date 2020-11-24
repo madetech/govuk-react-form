@@ -43,16 +43,38 @@ describe('ValidatingInputField', () => {
 
   it('stores user input in state', () => {
     const label = "last name";
-    const value = " "
+    let value = ""
     function changeValue(new_value) {
-      setValue(new_value)
+      value = new_value
     }
 
     render(<ValidatingInputField label={label} value={value} changeValue={changeValue}/>);
 
-    const inputField = container.querySelector('input');
-
-    TestUtils.Simulate.change(inputField, { target: { value: 'Smith' } });
+    const inputElement = container.querySelector('input');
+    expect(value).toEqual('');
+    TestUtils.Simulate.change(inputElement, { target: { value: 'Smith' } });
     expect(value).toEqual('Smith');
+  })
+
+  it('validates using the passed function', () => {
+    const label = "last name";
+    let value = ""
+    const changeValue = (new_value) => {
+      value = new_value
+    }
+
+    const mustNotContainNumbers = (value) => {
+      return !/\d/.test(value)
+    }
+    
+    render(<ValidatingInputField label={label} value={value} changeValue={changeValue} verify={mustNotContainNumbers} errorMessage={"ERROR"}/>);
+    
+    const validatingInputField = container.querySelector('#validatingInputField')
+    const inputElement = container.querySelector('input');
+    
+    
+    expect(value).toEqual('');
+    TestUtils.Simulate.change(inputElement, { target: { value: '1' } });
+    expect(validatingInputField.textContent).toContain("ERROR")
   })
 })
