@@ -15,6 +15,13 @@ describe('ValidatingInputField', () => {
   it('renders an input field', () => {
     render(<ValidatingInputField />);
     
-    expect(container.querySelector('ValidatingInputField')).not.toBeNull();
+    expect(container.querySelector('#validatingInputField')).not.toBeNull();
+  })
+
+  it('renders the label', () => {
+    const label = "first name";
+    render(<ValidatingInputField label={label}/>);
+    
+    expect(container.querySelector('#validatingInputField').textContent).toMatch("first name");
   })
 })
