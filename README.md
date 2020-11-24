@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# govuk-react-form
+
+An extensible React form built using GOV.UK components in the way of the Government Design System.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
