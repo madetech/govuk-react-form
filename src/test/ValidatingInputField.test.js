@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-dom/test-utils';
+import ReactTestUtils from 'react-dom/test-utils';
 import {useState} from 'react'
 
 import { ValidatingInputField } from '../ValidatingInputField';
@@ -41,18 +41,11 @@ describe('ValidatingInputField', () => {
     expect(container.querySelector('input')).not.toBeNull();
   })
 
-  it('stores user input in state', () => {
-    const label = "last name";
-    const value = " "
-    function changeValue(new_value) {
-      setValue(new_value)
-    }
+  it('saves existing input value when submitted', async () => {
+    expect.hasAssertions();
 
-    render(<ValidatingInputField label={label} value={value} changeValue={changeValue}/>);
+    render(<ValidatingInputField onChange={() => expect(firstName).toEqual('Ashley')} />)
 
-    const inputField = container.querySelector('input');
-
-    TestUtils.Simulate.change(inputField, { target: { value: 'Smith' } });
-    expect(value).toEqual('Smith');
+    await ReactTestUtils.Simulate.change(input('customer'));
   })
 })
