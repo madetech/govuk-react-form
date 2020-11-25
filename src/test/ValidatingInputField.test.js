@@ -41,11 +41,40 @@ describe('ValidatingInputField', () => {
     expect(container.querySelector('input')).not.toBeNull();
   })
 
-  it('saves existing input value when submitted', async () => {
-    expect.hasAssertions();
+  it('stores user input in state', () => {
+    const label = "last name";
+    let value = ""
+    function changeValue(new_value) {
+      value = new_value
+    }
 
-    render(<ValidatingInputField onChange={() => expect(firstName).toEqual('Ashley')} />)
+    render(<ValidatingInputField label={label} value={value} changeValue={changeValue}/>);
 
-    await ReactTestUtils.Simulate.change(input('customer'));
+    const inputElement = container.querySelector('input');
+    expect(value).toEqual('');
+    TestUtils.Simulate.change(inputElement, { target: { value: 'Smith' } });
+    expect(value).toEqual('Smith');
+  })
+
+  it('validates using the passed function', () => {
+    const label = "last name";
+    let value = ""
+    const changeValue = (new_value) => {
+      value = new_value
+    }
+
+    const mustNotContainNumbers = (value) => {
+      return !/\d/.test(value)
+    }
+    
+    render(<ValidatingInputField label={label} value={value} changeValue={changeValue} verify={mustNotContainNumbers} errorMessage={"ERROR"}/>);
+    
+    const validatingInputField = container.querySelector('#validatingInputField')
+    const inputElement = container.querySelector('input');
+    
+    
+    expect(value).toEqual('');
+    TestUtils.Simulate.change(inputElement, { target: { value: '1' } });
+    expect(validatingInputField.textContent).toContain("ERROR")
   })
 })
