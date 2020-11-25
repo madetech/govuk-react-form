@@ -54,7 +54,7 @@ describe('ValidatingForm', () => {
     expect(container.textContent).toMatch("Last name");
   })
 
-  it.skip("displays an error message if a field's input is invalid", () => {
+  it("displays an error message if a field's input is invalid", () => {
     const validationFunction = () => false; 
     const fields = [
       {
