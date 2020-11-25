@@ -15,13 +15,13 @@ describe('ValidatingForm', () => {
   const render = component => ReactDOM.render(component, container);
 
   it ('includes a form element', () => {
-    render (<ValidatingForm />);
+    render (<ValidatingForm onSubmit={() => null}/>);
 
     expect(container.querySelector('form')).not.toBeNull();
   })
 
   it ('when not given anything is blank', () => {
-    render (<ValidatingForm />);
+    render (<ValidatingForm onSubmit={() => null}/>);
 
     expect(container.querySelector('input')).toBeNull()
   })
@@ -34,7 +34,7 @@ describe('ValidatingForm', () => {
       }
     ]
     
-    render (<ValidatingForm fields={fields}/>)
+    render (<ValidatingForm fields={fields} onSubmit={() => null}/>);
 
     expect(container.querySelector('input')).not.toBeNull();
     expect(container.textContent).toMatch("First name");
@@ -48,7 +48,7 @@ describe('ValidatingForm', () => {
       }
     ]
     
-    render (<ValidatingForm fields={fields}/>)
+    render (<ValidatingForm fields={fields} onSubmit={() => null}/>);
 
     expect(container.querySelector('input')).not.toBeNull();
     expect(container.textContent).toMatch("Last name");
@@ -64,13 +64,34 @@ describe('ValidatingForm', () => {
         errorMessage: "Did not validate"
       }
     ]
-    
-    render (<ValidatingForm fields={fields}/>);
+
+
+    render (<ValidatingForm fields={fields} onSubmit={() => ()=>null}/>);
 
     const inputElement = container.querySelector("input");
 
     testUtils.Simulate.blur(inputElement, { target: { value: "Arbitrary value"} });
   
     expect(container.textContent).toMatch("Did not validate");
+  })
+
+  it ("contains a review and confirm button" , () => {
+    render (<ValidatingForm onSubmit={() => null}/>);
+
+    expect(container.querySelector('button')).not.toBeNull();
+    expect(container.querySelector('button').textContent).toMatch("Review and confirm");
+  })
+
+  it ("calls a function when the button is clicked" ,() => {
+    const callback = jest.fn(x => x);
+
+    render (<ValidatingForm onSubmit={callback}/>);
+
+    const button = container.querySelector('button')
+
+    testUtils.Simulate.click(button)
+
+    expect(callback.mock.calls.length).toBe(1);
+    expect(callback.mock.calls[0][0]).toEqual({})
   })
 })

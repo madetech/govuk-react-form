@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import Button from '@govuk-react/button'
 
-import { ValidatingInputField } from "./ValidatingInputField"
+const MySubmitFunction = (data) => {
+  returns 
+}
+
+<ValidatingForm fields={fields} onSubmit={MySubmitFunction}
+
 
 export const ValidatingForm = (props) => {
   const [valid, setValid] = useState()
-  const data = {}
-  
-  const onSubmit = () => {
-    props.onSubmit(data)
-  }
-
+  const [data, setData] = useState(initialState)
   return (
     <>
-      <form id="validatingForm" onSubmit={onSubmit}>
+      <form>
         {
           props.fields ? <ValidatingInputField 
+          data={data}
+          changeData={setData}
           label={props.fields[0].label}
           validate={props.fields[0].validate}
           errorMessage={props.fields[0].errorMessage}
@@ -23,7 +23,6 @@ export const ValidatingForm = (props) => {
           /> : null
         }
       </form>
-      <Button onClick={onSubmit} form="validatingForm" type="submit">Review and confirm</Button>
+      <Button onSubmit={props.onSubmit(data)}>Review and confirm</Button>
     </>
   )
-}
