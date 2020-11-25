@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-dom/test-utils';
+import TestUtils from 'react-dom/test-utils';
 import {useState} from 'react'
 
 import { ValidatingInputField } from '../ValidatingInputField';
@@ -57,7 +57,9 @@ describe('ValidatingInputField', () => {
   })
 
   it('validates using the passed function', () => {
-    const label = "last name";
+    const label = "Last name";
+    const invalidInputString = "thisShouldNotHaveANumberInIt_1"
+    const errorMessage = "Last name should not include numbers"
     let value = ""
     const changeValue = (new_value) => {
       value = new_value
@@ -67,14 +69,18 @@ describe('ValidatingInputField', () => {
       return !/\d/.test(value)
     }
     
-    render(<ValidatingInputField label={label} value={value} changeValue={changeValue} verify={mustNotContainNumbers} errorMessage={"ERROR"}/>);
+    render(<ValidatingInputField 
+      label={label} 
+      value={value} 
+      changeValue={changeValue} 
+      validate={mustNotContainNumbers} 
+      errorMessage={errorMessage}
+    />);
     
     const validatingInputField = container.querySelector('#validatingInputField')
     const inputElement = container.querySelector('input');
     
-    
-    expect(value).toEqual('');
-    TestUtils.Simulate.change(inputElement, { target: { value: '1' } });
-    expect(validatingInputField.textContent).toContain("ERROR")
+    TestUtils.Simulate.blur(inputElement, { target: { value: invalidInputString } });
+    expect(validatingInputField.textContent).toContain(errorMessage)
   })
 })

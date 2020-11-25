@@ -9,9 +9,19 @@ function App() {
   function changeValue(new_value) {
     setValue(new_value)
   }
+
+  const mustNotContainNumbers = (value) => {
+    return !/\d/.test(value)
+  }
   return (
     <div>
-      <ValidatingInputField label="first name" changeValue={changeValue} value={value}/>
+      <ValidatingInputField 
+        label="first name" 
+        changeValue={changeValue} 
+        value={value}
+        validate={mustNotContainNumbers}
+        errorMessage={"ERROR MESSAGE!"}
+      />
     </div>
   );
 }
