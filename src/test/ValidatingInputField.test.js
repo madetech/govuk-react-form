@@ -61,12 +61,17 @@ describe('ValidatingInputField', () => {
     const invalidInputString = "thisShouldNotHaveANumberInIt_1"
     const errorMessage = "Last name should not include numbers"
     let value = ""
+    let validInput = true
     const changeValue = (new_value) => {
       value = new_value
     }
 
     const mustNotContainNumbers = (value) => {
       return !/\d/.test(value)
+    }
+
+    const changeValidInput = (new_value) => {
+      validInput = new_value
     }
     
     render(<ValidatingInputField 
@@ -75,6 +80,7 @@ describe('ValidatingInputField', () => {
       changeValue={changeValue} 
       validate={mustNotContainNumbers} 
       errorMessage={errorMessage}
+      validInput={changeValidInput}
     />);
     
     const validatingInputField = container.querySelector('#validatingInputField')
@@ -82,5 +88,40 @@ describe('ValidatingInputField', () => {
     
     TestUtils.Simulate.blur(inputElement, { target: { value: invalidInputString } });
     expect(validatingInputField.textContent).toContain(errorMessage)
+  })
+
+  it('sends an invalid flag when input contains number', () => {
+    const label = "Last name";
+    const invalidInputString = "thisShouldNotHaveANumberInIt_1"
+    const errorMessage = "Last name should not include numbers"
+    let value = ""
+    let validInput = true
+
+    const mustNotContainNumbers = (value) => {
+      return !/\d/.test(value)
+    }
+    
+    const changeValidInput = (new_value) => {
+      validInput = new_value
+    }
+
+    const changeValue = (new_value) => {
+      value = new_value
+    }
+    render(<ValidatingInputField 
+      label={label} 
+      value={value} 
+      changeValue={changeValue} 
+      validate={mustNotContainNumbers} 
+      errorMessage={errorMessage}
+      validInput={changeValidInput}
+    />);
+
+    const validatingInputField = container.querySelector('#validatingInputField')
+    const inputElement = container.querySelector('input');
+    
+    TestUtils.Simulate.blur(inputElement, { target: { value: invalidInputString } });
+    expect(validInput).toBeFalsy
+
   })
 })
