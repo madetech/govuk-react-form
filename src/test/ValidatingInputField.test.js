@@ -14,31 +14,25 @@ describe('ValidatingInputField', () => {
 
   const render = component => ReactDOM.render(component, container);
 
-  it('renders an input field', () => {
-    render(<ValidatingInputField />);
+  it('renders an input element', () => {
+    const label = "last name";
+    render(<ValidatingInputField label={label}/>);
     
-    expect(container.querySelector('#validatingInputField')).not.toBeNull();
+    expect(container.querySelector('input')).not.toBeNull();
   })
 
   it('renders the label - first name', () => {
     const label = "first name";
     render(<ValidatingInputField label={label}/>);
     
-    expect(container.querySelector('#validatingInputField').textContent).toMatch("first name");
+    expect(container.textContent).toMatch("first name");
   })
 
   it('renders the label - last name', () => {
     const label = "last name";
     render(<ValidatingInputField label={label}/>);
     
-    expect(container.querySelector('#validatingInputField').textContent).toMatch("last name");
-  })
-
-  it('renders an input element', () => {
-    const label = "last name";
-    render(<ValidatingInputField label={label}/>);
-    
-    expect(container.querySelector('input')).not.toBeNull();
+    expect(container.textContent).toMatch("last name");
   })
 
   it('stores user input in state', () => {
@@ -83,11 +77,10 @@ describe('ValidatingInputField', () => {
       validInput={changeValidInput}
     />);
     
-    const validatingInputField = container.querySelector('#validatingInputField')
     const inputElement = container.querySelector('input');
     
     TestUtils.Simulate.blur(inputElement, { target: { value: invalidInputString } });
-    expect(validatingInputField.textContent).toContain(errorMessage)
+    expect(container.textContent).toContain(errorMessage)
   })
 
   it('sends an invalid flag when input contains number', () => {
@@ -117,7 +110,6 @@ describe('ValidatingInputField', () => {
       validInput={changeValidInput}
     />);
 
-    const validatingInputField = container.querySelector('#validatingInputField')
     const inputElement = container.querySelector('input');
     
     TestUtils.Simulate.blur(inputElement, { target: { value: invalidInputString } });
