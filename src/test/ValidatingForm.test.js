@@ -75,14 +75,14 @@ describe('ValidatingForm', () => {
     expect(container.textContent).toMatch("Did not validate");
   })
 
-  it ("contains a review and confirm button" , () => {
+  it ("contains a review and confirm button", () => {
     render (<ValidatingForm onSubmit={() => null}/>);
 
     expect(container.querySelector('button')).not.toBeNull();
     expect(container.querySelector('button').textContent).toMatch("Review and confirm");
   })
 
-  it ("calls a function when the button is clicked" ,() => {
+  it ("calls a function when the button is clicked", () => {
     const callback = jest.fn(x => x);
 
     render (<ValidatingForm onSubmit={callback}/>);
@@ -94,4 +94,31 @@ describe('ValidatingForm', () => {
     expect(callback.mock.calls.length).toBe(1);
     expect(callback.mock.calls[0][0]).toEqual({})
   })
+
+  it ("given one field, when that field is focussed and enter is pressed, calls a function", () => {
+    const callback = jest.fn(x => x);
+    const fields = [
+      {
+        label: "Last name",
+        type: "input",
+        validate: () => true,
+        errorMessage: "Did not validate"
+      }
+    ]
+
+    render (<ValidatingForm fields={fields} onSubmit={callback}/>);
+
+    // Set focus on input element
+    const input = container.querySelector('input');
+    testUtils.Simulate.click(input);
+
+    // User presses enter
+    testUtils.Simulate.keyPress(input, { key: "Enter" });
+
+    expect(callback.mock.calls.length).toBe(1);
+    expect(callback.mock.calls[0][0]).toEqual({})
+  })
+
+  it.todo("sends form data to function when form is submitted");
+  it.todo("does not allow submission of invalid data");
 })
